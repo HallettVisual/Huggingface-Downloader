@@ -7,6 +7,8 @@ ComfyUI model folders, but it works for any repo or file.
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
+![The downloader pulling a 4.6 GB FLUX text encoder at 237 MB/s](docs/screenshot.png)
+
 ## Why
 
 The `hf` command line tool switches to a machine-readable output mode as soon as its
