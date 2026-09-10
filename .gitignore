@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Local settings written by older versions of the app, and any stray copies
+.hf_downloader_gui.json
+settings.json
+
+# Downloaded models and Hugging Face staging data, in case anyone points the
+# destination at the checkout
+*.safetensors
+*.ckpt
+*.bin
+*.pth
+*.gguf
+*.incomplete
+.cache/
+
+# Editors and OS cruft
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
