@@ -28,6 +28,13 @@ APP_TITLE = "Hugging Face Model Downloader"
 
 WORKER_FLAG = "--worker"
 
+ASSETS_DIR = Path(__file__).resolve().parent / "assets"
+
+# Windows groups taskbar buttons by this ID. The shortcut made by
+# create_shortcut.ps1 carries the same value, which is what lets the running
+# window stack under a pinned icon instead of opening a second "Python" button.
+APP_USER_MODEL_ID = "HallettVisual.HFModelDownloader"
+
 # huggingface_hub gained Xet support in 0.30; below that the worker is pointless.
 MIN_HUB_VERSION = (0, 30)
 
@@ -52,7 +59,7 @@ def config_path():
 def find_comfy_models_dir():
     """Best guess at a ComfyUI models folder on this machine, or None."""
     here = Path(__file__).resolve()
-    roots = [Path.cwd(), *here.parents[:4], Path.home()]
+    roots = [Path.cwd(), *list(here.parents)[:4], Path.home()]
     for root in roots:
         for candidate in (root / "models", root / "ComfyUI" / "models"):
             try:
@@ -427,6 +434,15 @@ def gui_main():
     from tkinter import filedialog as fd_module, messagebox as mb_module, ttk as ttk_module
 
     tk, ttk, filedialog, messagebox = tk_module, ttk_module, fd_module, mb_module
+
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            # Must happen before the first window exists.
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(APP_USER_MODEL_ID)
+        except Exception:
+            pass
+
     HFDownloader().mainloop()
 
 
@@ -435,6 +451,7 @@ class HFDownloader:
     def __init__(self):
         self.root = tk.Tk()
         self.root.title(APP_TITLE)
+        self._set_window_icon()
         self.root.geometry("1120x840")
         self.root.minsize(960, 720)
 
@@ -481,6 +498,19 @@ class HFDownloader:
 
     def mainloop(self):
         self.root.mainloop()
+
+    def _set_window_icon(self):
+        try:
+            ico = ASSETS_DIR / "icon.ico"
+            png = ASSETS_DIR / "icon.png"
+            if sys.platform == "win32" and ico.exists():
+                # The .ico carries hand-sized frames, which beat a scaled PNG on the taskbar.
+                self.root.iconbitmap(default=str(ico))
+            elif png.exists():
+                self._icon_image = tk.PhotoImage(file=str(png))
+                self.root.iconphoto(True, self._icon_image)
+        except Exception:
+            pass
 
     def _post(self, func, *args):
         """Queue work for the UI thread.

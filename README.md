@@ -56,6 +56,24 @@ python hf_downloader.py
 
 Or on Windows, double-click `run.bat`.
 
+### Start menu, desktop and taskbar (Windows)
+
+Double-click **`install_shortcut.bat`**. It adds *HF Model Downloader* to the Start
+menu and the desktop with its own icon, launching without a console window. Then
+open Start, right-click the entry and choose **Pin to taskbar**. (Windows does not
+let programs pin themselves, so that last click is yours.)
+
+The shortcut and the app share an AppUserModelID, so the running window stacks onto
+the pinned icon instead of showing up as a second, generic Python button. Because
+the shortcut points at this folder, re-run the installer if you move the checkout.
+
+From PowerShell you can also pick the interpreter, or remove the shortcuts:
+
+```powershell
+.\create_shortcut.ps1 -Desktop -Python "C:\Python312\pythonw.exe"
+.\create_shortcut.ps1 -Remove
+```
+
 1. Paste a Hugging Face file URL and press **Parse URL** — or type the repository and
    file path yourself. Leave the file path empty to fetch the whole repository.
 2. Pick a destination, either by typing it, browsing, or double-clicking a folder in
